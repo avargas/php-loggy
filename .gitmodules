@@ -1,0 +1,3 @@
+[submodule "vendor/Bash-Color"]
+	path = vendor/Bash-Color
+	url = https://github.com/AzizLight/Bash-Color.git

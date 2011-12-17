@@ -7,7 +7,9 @@ use loggy\Message;
 
 abstract class AbstractFormatter
 {
-	public static function formatLogMessage ($args)
+	const DATE_FORMAT = 'Y-m-d D H:i:s O';
+
+	public function formatLogMessage ($args)
 	{
 		$args = is_array($args) ? $args: array($args);
 		$argc = count($args);
@@ -23,7 +25,7 @@ abstract class AbstractFormatter
 		return '';
 	}
 
-	public static function formatLoggerMessages ($messages)
+	public function formatLoggerMessages ($messages)
 	{
 		if ($messages instanceof AbstractWriter) {
 			$messages = $messages->getMessages();
@@ -32,14 +34,44 @@ abstract class AbstractFormatter
 		$all = array();
 
 		foreach ($messages as $message) {
-			$all[] = static::format($message);
+			$all[] = $this->format($message);
 		}
 
 		return $all;
 	}
 
-	public static function format (Message $message)
+	public function format (Message $message)
 	{
 		return $message->getLogMessage();
+	}
+
+	public function formatTimestamp (Message $message)
+	{
+		return $message->getDateTime()->format(static::DATE_FORMAT);
+	}
+
+	public function formatLevelName (Message $message)
+	{
+		return $message->getLevelName();
+	}
+
+	public function formatFacility (Message $message)
+	{
+		return $message->getFacility();
+	}
+
+	public function formatMessage (Message $message)
+	{
+		return $this->formatLogMessage($message->getLogMessage());
+	}
+
+	public function formatMemory (Message $m)
+	{
+		return $mem = number_format(memory_get_usage(true) / 1024 / 1024, 2);
+	}
+
+	public function formatRuntime (Message $m)
+	{
+		return number_format(microtime(true) - LOGGY_START_MS, 2);
 	}
 }

@@ -8,16 +8,15 @@ use DateTime;
 
 class SimpleFormatter extends AbstractFormatter
 {
-	const DATE_FORMAT = 'Y-m-d D H:i:s O';
-
-	public static function format (Message $message)
+	public function format (Message $message)
 	{
-		$format = '[%s - %s] %s';
+		$format = '[%s - %s] %s: %s';
 
-		$date = $message->getDateTime()->format(static::DATE_FORMAT);
-		$levelName = $message->getLevelName();
-		$str = static::formatLogMessage($message->getLogMessage());
-
-		return sprintf($format, $date, $levelName, $str);
+		$date = $this->formatTimestamp($message);
+		$levelName = $this->formatLevelName($message);
+		$facility = $this->formatFacility($message);
+		$str = $this->formatMessage($message);
+		
+		return sprintf($format, $date, $levelName, $facility, $str);
 	}
 }

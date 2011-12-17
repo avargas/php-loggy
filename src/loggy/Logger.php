@@ -9,6 +9,7 @@ const WARN = 0x8;
 const FATAL = 0x10;
 
 const DEFAULT_WRITER = 'loggy\writer\DummyWriter';
+const DEFAULT_FORMATTER = 'loggy\formatter\SimpleFormatter';
 
 abstract class Logger
 {
@@ -35,21 +36,21 @@ abstract class Logger
 			}
 		}
 
-		return static::getInstance()->createMessageCreator($facility);
+		return static::getWriter()->createMessageCreator($facility);
 	}
 
-	public static function factory ($writer = null, $config = null)
+	public static function setWriter ($writer = null)
 	{
-		$class = $writer ? : DEFAULT_WRITER;
-		return static::$instance = $class::createInstance($config);
+		return static::$instance = $writer;
 	}
 
-	public static function getInstance ()
+	public static function getWriter ()
 	{
 		if (static::$instance) { 
 			return static::$instance;
 		}
 
-		return static::factory();
+		$class = DEFAULT_WRITER;
+		return static::setWriter(new $class);
 	}
 }

@@ -2,11 +2,15 @@
 
 namespace loggy\writer;
 
+use loggy;
+use loggy\formatter\AbstractFormatter;
 use loggy\MessageCreator;
+use loggy\Message;
 
 abstract class AbstractWriter
 {
 	protected $config;
+	protected $formatter;
 	protected $messages = array();
 
 	public function setConfig ($config)
@@ -24,13 +28,18 @@ abstract class AbstractWriter
 		return isset($this->config[$key]) ? $this->config[$key] : null;
 	}
 
-	public function addMessage ($message)
+	public function isReportableLevel ($level)
 	{
 		# check to see if we're filtering out flags
-		if (($only = $this->getConfig('only')) && !($message->getLevel() & $only)) {
+		return !(($only = $this->getConfig('only')) && !($level & $only));
+	}
+
+	public function addMessage (Message $message)
+	{
+		if (!$this->isReportableLevel($message->getLevel())) {
 			return false;
 		}
-		
+
 		$this->messages[] = $message;
 		return true;
 	}
@@ -38,6 +47,22 @@ abstract class AbstractWriter
 	public function getMessages ()
 	{
 		return $this->messages;
+	}
+
+	public function setFormatter (AbstractFormatter $formatter)
+	{
+		$this->formatter = $formatter;
+		return $this;
+	}
+
+	public function getFormatter ()
+	{
+		if (!$this->formatter) {
+			$class = loggy\DEFAULT_FORMATTER;
+			$this->setFormatter(new $class);
+		}
+
+		return $this->formatter;
 	}
 
 	public function createMessageCreator ($facility = null)
