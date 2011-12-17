@@ -10,8 +10,6 @@ const FATAL = 0x10;
 
 const DEFAULT_WRITER = 'loggy\writer\DummyWriter';
 
-var_dump(FATAL);
-
 abstract class Logger
 {
 	public static $LEVELS = array(
