@@ -2,11 +2,13 @@
 
 namespace loggy;
 
-const INFO = 0x1;
-const DEBUG = 0x2;
-const ERROR = 0x4;
-const WARN = 0x8;
-const FATAL = 0x10;
+const INFO = 0x1;   # information (useful)
+const DEBUG = 0x2;  # debug (for developers)
+const ERROR = 0x4;  # handleable error
+const WARN = 0x8;   # a warning
+const FATAL = 0x10; # # fatal!
+
+const ALL = 31;
 
 const DEFAULT_WRITER = 'loggy\writer\DummyWriter';
 const DEFAULT_FORMATTER = 'loggy\formatter\SimpleFormatter';
