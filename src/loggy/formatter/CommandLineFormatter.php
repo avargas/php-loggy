@@ -15,7 +15,10 @@ class CommandLineFormatter extends SimpleFormatter
 
 	public function __construct ()
 	{
-		$this->colors = new Colors;
+		if ($this->canDoColors()) {
+			$this->colors = new Colors;
+		}
+
 		$this->colorLevelMapping = array(
 			'INFO'=>array('green', null),
 			'DEBUG'=>array('cyan', null),
@@ -43,11 +46,21 @@ class CommandLineFormatter extends SimpleFormatter
 
 	public function formatLevelName (Message $message)
 	{
-		$colorLevel = &$this->colorLevelMapping;
 		$level = $message->getLevelName();
+
+		if (!$this->canDoColors()) {
+			return $level;
+		}
+
+		$colorLevel = &$this->colorLevelMapping;
 
 		if (isset($colorLevel[$level])) {
 			return $this->colors->colorize($level, $colorLevel[$level][0], $colorLevel[$level][1]);
 		}
-}
+	}
+
+	public function canDoColors ()
+	{
+		return class_exists('\Colors') || (function_exists('posix_isatty') && posix_isatty());
+	}
 }
