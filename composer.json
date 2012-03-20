@@ -1,5 +1,5 @@
 {
-	"name": "trukin/php-loggy.git",
+	"name": "trukin/php-loggy",
 	"description": "Very simple PHP logging framework",
 	"type": "library",
 	"license": "MIT",
