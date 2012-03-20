@@ -38,6 +38,10 @@ abstract class Logger
 			}
 		}
 
+		if (is_object($facility)) {
+			$facility = get_class($facility);
+		}
+
 		return static::getWriter()->createMessageCreator($facility);
 	}
 
