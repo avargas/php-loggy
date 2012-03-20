@@ -10,20 +10,21 @@ use loggy;
 
 class CommandLineFormatter extends SimpleFormatter
 {
+	protected $canDoColors;
 	protected $colors;
 	protected $colorLevelMapping;
 
 	public function __construct ()
 	{
 		if ($this->canDoColors()) {
-			$this->colors = new Colors;
+			$this->colors = new Colors\Color;
 		}
 
 		$this->colorLevelMapping = array(
 			'INFO'=>array('green', null),
 			'DEBUG'=>array('cyan', null),
 			'ERROR'=>array('red', null),
-			'WARN'=>array('purple', null),
+			'WARN'=>array('magenta', null),
 			'FATAL'=>array('red', null)
 		);
 	}
@@ -52,15 +53,29 @@ class CommandLineFormatter extends SimpleFormatter
 			return $level;
 		}
 
-		$colorLevel = &$this->colorLevelMapping;
+		$colorLevel = $this->colorLevelMapping;
 
 		if (isset($colorLevel[$level])) {
-			return $this->colors->colorize($level, $colorLevel[$level][0], $colorLevel[$level][1]);
+			$colors = $this->colors;
+			$colors = $colors($level);
+
+			$colors->fg($colorLevel[$level][0]);
+
+			# background?
+			if ($colorLevel[$level][1]) {
+				$colors->highlight($colorLevel[$level][1]);
+			}
+
+			return (string)$colors;
 		}
 	}
 
 	public function canDoColors ()
 	{
-		return class_exists('\Colors') || (function_exists('posix_isatty') && posix_isatty());
+		if ($this->canDoColors !== null) {
+			return $this->canDoColors;
+		}
+
+		return $this->canDoColors = class_exists('Colors\Color') && defined('STDOUT') && function_exists('posix_isatty') && posix_isatty(STDIN);
 	}
 }

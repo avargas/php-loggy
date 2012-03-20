@@ -11,7 +11,8 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"ulrichsg/getopt-php": ">=1.0.0"
+		"ulrichsg/getopt-php": ">=1.0.0",
+		"kevinlebrun/colors.php": "*"
 	},
 	"autoload": {
 		"psr": {"loggy": "src"}
