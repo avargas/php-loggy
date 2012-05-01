@@ -7,7 +7,7 @@ use loggy\Message;
 
 abstract class AbstractFormatter
 {
-	const DATE_FORMAT = 'Y-m-d D H:i:s O';
+	const DATE_FORMAT = DATE_ATOM;
 
 	public function formatLogMessage ($args)
 	{
@@ -15,6 +15,30 @@ abstract class AbstractFormatter
 		$argc = count($args);
 
 		if ($argc > 1) {
+			# pretty arrays
+			foreach ($args as $e=>$v) {
+				# print arrays with json_encode
+				if (is_array($v)) {
+					$args[$e] = json_encode($v);
+					continue;
+				}
+
+				# print object __toString or class
+				if (is_object($v)) {
+					if (method_exists($v, '__toString')) {
+						$args[$e] = $v->__toString();
+					} else {
+						$args[$e] = get_class($v);
+					}
+
+					continue;
+				}
+
+				if (!is_string($v) && !is_numeric($v)) {
+					$args[$e] = varstr($v) . '(' . $v . ')';
+				}
+			}
+
 			return call_user_func_array('sprintf', $args);
 		}
 
