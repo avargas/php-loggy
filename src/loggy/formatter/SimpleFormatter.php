@@ -10,7 +10,7 @@ class SimpleFormatter extends AbstractFormatter
 {
 	public function format (Message $message)
 	{
-		$format = '[%s - %s] %s: %s';
+		$format = '[%s %s] %s: %s';
 
 		$date = $this->formatTimestamp($message);
 		$levelName = $this->formatLevelName($message);

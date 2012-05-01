@@ -32,7 +32,7 @@ class CommandLineFormatter extends SimpleFormatter
 	public function format (Message $message)
 	{
 		# date - sec - memory - level - facility - str
-		$format = '[%s - %s - %smb - %s] %s: %s';
+		$format = '%s|%s|%s:%s %s: %s';
 
 		$date = $this->formatTimestamp($message);
 		$levelName = $this->formatLevelName($message);
