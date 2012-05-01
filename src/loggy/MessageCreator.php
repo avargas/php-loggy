@@ -19,6 +19,23 @@ class MessageCreator
 		}
 	}
 
+
+	public function __get ($k)
+	{
+		$i = array_search(strtoupper($k), Logger::$LEVELS);
+
+		if ($i === false) {
+			throw new LoggyException('unknown log level "' . $k . '"');
+		}
+
+
+		if ($this->writer) {
+			return $this->writer->isReportableLevel($i);
+		}
+
+		return false;
+	}
+
 	public function setWriter ($writer)
 	{
 		$this->writer = $writer;
