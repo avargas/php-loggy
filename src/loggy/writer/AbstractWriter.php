@@ -14,6 +14,11 @@ abstract class AbstractWriter
 	protected $formatter;
 	protected $messages = array();
 
+	public function __construct ($config = array())
+	{
+		$this->config = $config;
+	}
+
 	public function setConfig ($k, $v = null)
 	{
 		if (is_array($k)) {
