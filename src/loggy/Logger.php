@@ -2,6 +2,8 @@
 
 namespace loggy;
 
+defined('LOGGY_START_MS') or define('LOGGY_START_MS', microtime(true));
+
 const INFO = 0x1;   # information (useful)
 const DEBUG = 0x2;  # debug (for developers)
 const ERROR = 0x4;  # handleable error
